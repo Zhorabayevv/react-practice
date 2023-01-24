@@ -1,0 +1,40 @@
+.pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 500px;
+    list-style: none;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    li{
+        margin: 0 10px;
+        padding: 10px;
+        border: 1px solid teal;
+        border-radius: 5px;
+        cursor: pointer;
+        &:hover{
+            color: #000;
+            background-color: teal;
+        }
+    }
+    .active{
+        color: #000;
+        background-color: teal;
+    }
+    .disabled{
+        color: #000;
+        background-color: rgb(148, 148, 148);
+        cursor: not-allowed;
+    }
+    :global{
+        .selected{
+            color: #000;
+            background-color: teal;
+        }
+    }
+}

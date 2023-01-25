@@ -1,10 +1,14 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from "../../redux/slices/basketSlice";
+import {
+  addProduct,
+  basketProductsSelector,
+} from "../../redux/slices/basketSlice";
+import { Link } from "react-router-dom";
 
 function ItemBlockComponent(props) {
   const dispatch = useDispatch();
-  const basketProduct = useSelector(({ basket }) => basket.products.find((item) => item.id === props.id));
+  const basketProduct = useSelector(basketProductsSelector(props.id));
   const addedCount = basketProduct ? basketProduct.count : 0;
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
@@ -30,15 +34,19 @@ function ItemBlockComponent(props) {
       size: sizeNames[activeSize],
       type: typeNames[activeType],
     };
-    dispatch(addProduct(product))
+    dispatch(addProduct(product));
   };
-
-
   return (
     <div className="pizza-block-wrapper">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={props.imageUrl} alt="Pizza" />
-        <h4 className="pizza-block__title">{props.title}</h4>
+        <Link to={`/product/${props.id}`}>
+          <img
+            className="pizza-block__image"
+            src={props.imageUrl}
+            alt="Pizza"
+          />
+          <h4 className="pizza-block__title">{props.title}</h4>
+        </Link>
         <div className="pizza-block__selector">
           <ul>
             {props.types.map((item, index) => (
@@ -55,7 +63,10 @@ function ItemBlockComponent(props) {
         </div>
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">от {props.price} ₸</div>
-          <button className="button button--outline button--add" onClick={onAddProduct}>
+          <button
+            className="button button--outline button--add"
+            onClick={onAddProduct}
+          >
             <svg
               width="12"
               height="12"

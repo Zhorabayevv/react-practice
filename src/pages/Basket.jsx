@@ -2,13 +2,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import BasketProductComponent from "../components/BasketProductComponent";
-import { clearBasket } from "../redux/slices/basketSlice";
+import { basketSelector, clearBasket } from "../redux/slices/basketSlice";
 import BasketEmptyComponent from "../components/BasketEmptyComponent";
 
 export const Carts = () => {
   const dispatch = useDispatch();
-  const { products, totalPrice } = useSelector(({ basket }) => basket);
-  console.log(totalPrice);
+  const { products, totalPrice } = useSelector(basketSelector);
   const totalCount = products.reduce((sum, product) => sum + product.count, 0);
 
   const onClearBasket = () => {

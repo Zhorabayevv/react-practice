@@ -9,12 +9,6 @@ export const basketSlice = createSlice({
   name: 'basket',
   initialState,
   reducers: {
-    // addProduct: (state, action) => {
-    //     // const index = state.products.findIndex(item => item.id === action.payload.id);
-    //     state.products.push(action.payload);
-    //     console.log(action.payload.price);        
-    //     state.totalPrice += action.payload.price;
-    // },\
     addProduct: (state, action) => {
         const findProduct = state.products.find(item => item.id === action.payload.id);
         if (findProduct) {
@@ -36,13 +30,11 @@ export const basketSlice = createSlice({
                 state.products = state.products.filter(item => item.id !== action.payload.id);
             }
         }
-        console.log(findProduct.price, state.totalPrice);
         state.totalPrice = state.totalPrice - findProduct.price;
         // state.totalPrice = state.products.
     },
     removeProducts: (state, action) => {
         state.products = state.products.filter(item => item.id !== action.payload);
-        console.log(state.products);
         state.totalPrice = state.products.reduce((sum, product) => sum + product.price * product.count, 0);
     },
     clearBasket: (state) => {
@@ -50,7 +42,11 @@ export const basketSlice = createSlice({
         state.totalPrice = 0;
     },
   }
-})
+});
+
+
+export const basketSelector = ({basket}) => basket;
+export const basketProductsSelector = (i) => ({ basket }) => basket.products.find((item) => item.id === i);
 
 export const {addProduct, removeProduct, removeProducts, clearBasket } = basketSlice.actions;
 

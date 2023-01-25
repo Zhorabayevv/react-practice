@@ -9,9 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { filterSelector, setCategoryId, setQueryParams } from "../redux/slices/filterSlice";
 import { useNavigate } from "react-router";
 import { fetchProducts, productsSelector } from "../redux/slices/productsSlice";
-import { Link } from "react-router-dom";
 
-export const HomeComponent = () => {
+const HomeComponent: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { products, status } = useSelector(productsSelector);
@@ -19,7 +18,7 @@ export const HomeComponent = () => {
   // const { searchItems } = React.useContext(SearchContext);
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-  const onChangeCategories = (i) => {
+  const onChangeCategories = (i: number) => {
     dispatch(setCategoryId(i));
   };
   const fetchItems = async () => {
@@ -27,6 +26,7 @@ export const HomeComponent = () => {
       activeCategories > 0 ? `category=${activeCategories}` : "";
     const searchItemsName = searchValue ? `search=${searchValue}` : "";
     dispatch(
+      // @ts-ignore
       fetchProducts({ categoryNames, searchItemsName, sort, pageCount})
     );
   };
@@ -65,7 +65,7 @@ export const HomeComponent = () => {
   const skeletonItems = [...Array(6)].map((_, index) => (
     <ItemSkeletonComponent key={index} />
   ));
-  const values = products.map((item) => (
+  const values = products.map((item: any) => (
     <ItemBlockComponent key={item.id} {...item} />
   ));
   return (

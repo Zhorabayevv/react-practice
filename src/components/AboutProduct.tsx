@@ -2,8 +2,20 @@ import axios from "axios";
 import React from "react";
 import { useNavigate, useParams } from "react-router";
 
-const AboutProduct = () => {
-  const [product, setProduct] = React.useState();
+interface ProductInterface {
+  id: string;
+  imageUrl: string;
+  title: string;
+  types: [number];
+  sizes: [number],
+  price: number;
+  category: number;
+  rating: number;
+}
+
+
+const AboutProduct: React.FC = () => {
+  const [product, setProduct] = React.useState<ProductInterface>();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -29,9 +41,9 @@ const AboutProduct = () => {
 
   return (
     <div className="container">
-      <h1>About {product.title}</h1>
-      <img src={product.imageUrl} alt="" />
-      <p>{product.price}</p>
+      <h1>About {product?.title}</h1>
+      <img src={product?.imageUrl} alt="" />
+      <p>{product?.price}</p>
     </div>
   );
 };

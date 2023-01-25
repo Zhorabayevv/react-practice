@@ -6,13 +6,24 @@ import {
 } from "../../redux/slices/basketSlice";
 import { Link } from "react-router-dom";
 
-function ItemBlockComponent(props) {
+interface ItemBlockInterfaceProps {
+  id: number;
+  title: string;
+  imageUrl: string;
+  price: number;
+  sizes: number[];
+  types: number[];
+  rating: number;
+}
+
+const typeNames = ["тонкое", "традиционное"];
+
+const ItemBlockComponent: React.FC<ItemBlockInterfaceProps> = (props) => {
   const dispatch = useDispatch();
   const basketProduct = useSelector(basketProductsSelector(props.id));
   const addedCount = basketProduct ? basketProduct.count : 0;
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
-  const typeNames = ["тонкое", "традиционное"];
   const sizeNames = [26, 30, 40];
 
   const sizes = props.sizes.map((item, index) => (

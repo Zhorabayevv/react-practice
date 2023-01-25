@@ -1,13 +1,14 @@
-import React from "react";
 import logoSvg from "../assets/img/pizza-logo.svg";
 import { Link, useLocation } from "react-router-dom";
 import SearchComponent from "./Search/SearchComponent";
 import { useSelector } from "react-redux";
 import { basketSelector } from "../redux/slices/basketSlice";
 
-function Header() {
+const Header: React.FC = () => {
   const { products, totalPrice } = useSelector(basketSelector);
-  const totalCount = products.reduce((sum, product) => sum + product.count, 0);
+  console.log(products);
+  
+  const totalCount = products.reduce((sum: number, product: any) => sum + product.count, 0);
 
   const location = useLocation();
 

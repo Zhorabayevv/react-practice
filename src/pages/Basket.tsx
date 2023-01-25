@@ -5,10 +5,10 @@ import BasketProductComponent from "../components/BasketProductComponent";
 import { basketSelector, clearBasket } from "../redux/slices/basketSlice";
 import BasketEmptyComponent from "../components/BasketEmptyComponent";
 
-export const Carts = () => {
+const Carts: React.FC = () => {
   const dispatch = useDispatch();
   const { products, totalPrice } = useSelector(basketSelector);
-  const totalCount = products.reduce((sum, product) => sum + product.count, 0);
+  const totalCount = products.reduce((sum: number, product: any) => sum + product.count, 0);
 
   const onClearBasket = () => {
     if (window.confirm("Вы действительно хотите очистить корзину?")) {
@@ -98,7 +98,7 @@ if(!products.length) {
           </div>
         </div>
         <div className="content__items_cart">
-          {products.map((product) => (
+          {products.map((product: any) => (
             <BasketProductComponent key={product.id} {...product} />
           ))  
           }

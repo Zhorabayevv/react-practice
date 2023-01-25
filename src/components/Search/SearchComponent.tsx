@@ -4,11 +4,11 @@ import classes from "./SearchComponent.module.scss";
 import { useDispatch} from "react-redux";
 import { setSearchValue } from "../../redux/slices/filterSlice";
 
-export const SearchComponent = () => {
+export const SearchComponent: React.FC = () => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue1] = React.useState("");
   // const { searchItems, setSearchItems } = React.useContext(SearchContext);
-  const inputRef = React.useRef();
+  const inputRef = React.useRef<HTMLInputElement>(null);
   // const searchValue = useSelector(searchValueSelector);
 
 
@@ -20,7 +20,7 @@ export const SearchComponent = () => {
   );
 
 
-  const onChangeSearchItems = (e) => {
+  const onChangeSearchItems = (e: any) => {
     setSearchValue1(e.target.value);
     debounceSearch(e.target.value);
   };
@@ -28,7 +28,7 @@ export const SearchComponent = () => {
   const onClickClear = () => {
     dispatch(setSearchValue(""));
     setSearchValue1("");
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
 
 

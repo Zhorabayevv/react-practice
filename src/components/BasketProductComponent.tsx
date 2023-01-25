@@ -2,7 +2,17 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { addProduct, removeProduct, removeProducts } from '../redux/slices/basketSlice';
 
-const BasketProductComponent = ({id, title, price, count, imageUrl, size, type}) => {
+interface BasketProductInterfaceProps {
+    id: string;
+    title: string;
+    price: number;
+    count: number;
+    imageUrl: string;
+    size: number;
+    type: string;
+};
+
+const BasketProductComponent:React.FC <BasketProductInterfaceProps> = ({id, title, price, count, imageUrl, size, type}) => {
 
     const dispatch = useDispatch();
 

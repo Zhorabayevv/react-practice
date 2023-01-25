@@ -38,6 +38,7 @@ export const filterSlice = createSlice({
 
 export const sortSelector = ({ filter }) => filter.sort;
 export const filterSelector = ({ filter }) => filter;
+export const pageCountSelector = ({ filter }) => filter.pageCount;
 
 
 export const { setCategoryId, setSortType, setPageCount, setQueryParams, setSearchValue } = filterSlice.actions;

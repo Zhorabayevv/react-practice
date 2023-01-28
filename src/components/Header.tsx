@@ -1,16 +1,26 @@
+import React from "react";
 import logoSvg from "../assets/img/pizza-logo.svg";
 import { Link, useLocation } from "react-router-dom";
 import SearchComponent from "./Search/SearchComponent";
 import { useSelector } from "react-redux";
-import { basketSelector } from "../redux/slices/basketSlice";
+import { basketSelector } from "../redux/basket/selectors";
 
 const Header: React.FC = () => {
-  const { products, totalPrice } = useSelector(basketSelector);
-  console.log(products);
-  
-  const totalCount = products.reduce((sum: number, product: any) => sum + product.count, 0);
-
   const location = useLocation();
+  const { products, totalPrice } = useSelector(basketSelector);
+  const isMounted = React.useRef(false);
+
+  const totalCount = products.reduce(
+    (sum: number, product: any) => sum + product.count,
+    0
+  );
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      localStorage.setItem("basket", JSON.stringify(products));
+    }
+    isMounted.current = true;
+  }, [products]);
 
   return (
     <div className="header">
@@ -66,6 +76,6 @@ const Header: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Header;

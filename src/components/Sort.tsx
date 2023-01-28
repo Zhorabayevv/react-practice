@@ -1,46 +1,49 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSortType, sortSelector } from "../redux/slices/filterSlice";
+import { useDispatch } from "react-redux";
+import { SortInterface, SortType } from "../redux/filter/types";
+import {
+  setSortType,
+} from "../redux/filter/slice";
 
-interface SortItemInterface {
-  id: number;
-  name: string;
-  type: string;
-}
-
-export const sortList: SortItemInterface[] = [
+export const sortList: SortInterface[] = [
   {
-    id: 0,
+    id: "0",
     name: "популярности",
-    type: "popular",
+    type: SortType.POPULAR,
   },
   {
-    id: 1,
+    id: "1",
     name: "цене",
-    type: "price",
+    type: SortType.PRICE,
   },
   {
-    id: 2,
+    id: "2",
     name: "алфавиту",
-    type: "alphabet",
+    type: SortType.ALPHABET,
   },
 ];
 
-function Sort() {
+interface SortProps {
+  value: SortInterface;
+}
+
+const Sort: React.FC<SortProps> = ({ value }) => {
   const dispatch = useDispatch();
-  const selectedSort = useSelector(sortSelector);
+  // const selectedSort = useSelector(sortSelector);
 
   const sortRef = React.useRef<HTMLDivElement>(null);
   const [activeSort, setActiveSort] = React.useState(false);
-  const onClickSort = (i: SortItemInterface) => {
+  const onClickSort = (i: SortInterface) => {
     dispatch(setSortType(i));
     setActiveSort(false);
   };
 
   React.useEffect(() => {
-    if (activeSort === true) {
-      const handleClickOutside = (e: any) => {
-        if (!e.path.includes(sortRef.current)) {
+      const handleClickOutside = (e: MouseEvent) => {
+        const _e = e as MouseEvent & {
+          path: Node[];
+        };
+        if (sortRef.current && !_e.path.includes(sortRef.current)) {
           setActiveSort(false);
         }
       };
@@ -49,8 +52,7 @@ function Sort() {
       return () => {
         document.body.removeEventListener("click", handleClickOutside);
       };
-    }
-  }, [activeSort]);
+  }, []);
 
   return (
     <div className="sort" ref={sortRef}>
@@ -68,9 +70,7 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setActiveSort(!activeSort)}>
-          {selectedSort.name}
-        </span>
+        <span onClick={() => setActiveSort(!activeSort)}>{value.name}</span>
       </div>
       {activeSort && (
         <div className="sort__popup">
@@ -78,7 +78,7 @@ function Sort() {
             {sortList.map((item) => {
               return (
                 <li
-                  className={selectedSort.id === item.id ? "active" : ""}
+                  className={value.id === item.id ? "active" : ""}
                   onClick={() => onClickSort(item)}
                   key={item.id}
                 >
@@ -91,5 +91,6 @@ function Sort() {
       )}
     </div>
   );
-}
+};
+
 export default Sort;

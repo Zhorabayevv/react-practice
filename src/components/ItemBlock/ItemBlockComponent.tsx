@@ -1,24 +1,14 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addProduct,
-  basketProductsSelector,
-} from "../../redux/slices/basketSlice";
+import { ProductInterface } from "../../redux/basket/types";
+import { basketProductsSelector } from "../../redux/basket/selectors";
+import { addProduct } from "../../redux/basket/slice";
 import { Link } from "react-router-dom";
-
-interface ItemBlockInterfaceProps {
-  id: number;
-  title: string;
-  imageUrl: string;
-  price: number;
-  sizes: number[];
-  types: number[];
-  rating: number;
-}
+import { ItemBlockInterface } from "../../redux/product/types";
 
 const typeNames = ["тонкое", "традиционное"];
 
-const ItemBlockComponent: React.FC<ItemBlockInterfaceProps> = (props) => {
+const ItemBlockComponent: React.FC<ItemBlockInterface> = (props) => {
   const dispatch = useDispatch();
   const basketProduct = useSelector(basketProductsSelector(props.id));
   const addedCount = basketProduct ? basketProduct.count : 0;
@@ -37,13 +27,14 @@ const ItemBlockComponent: React.FC<ItemBlockInterfaceProps> = (props) => {
   ));
 
   const onAddProduct = () => {
-    const product = {
+    const product: ProductInterface = {
       id: props.id,
       title: props.title,
       imageUrl: props.imageUrl,
       price: props.price,
       size: sizeNames[activeSize],
       type: typeNames[activeType],
+      count: 0,
     };
     dispatch(addProduct(product));
   };
@@ -97,6 +88,6 @@ const ItemBlockComponent: React.FC<ItemBlockInterfaceProps> = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default ItemBlockComponent;

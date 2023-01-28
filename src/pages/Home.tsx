@@ -5,61 +5,70 @@ import ItemSkeletonComponent from "../components/ItemBlock/ItemSkeletonComponent
 import ItemBlockComponent from "../components/ItemBlock/ItemBlockComponent";
 import qs from "qs";
 import PaginationComponent from "../components/Pagination/PaginationComponent";
-import { useDispatch, useSelector } from "react-redux";
-import { filterSelector, setCategoryId, setQueryParams } from "../redux/slices/filterSlice";
+import { useSelector } from "react-redux";
+import { FilterInterface2 } from "../redux/filter/types";
+import { filterSelector } from "../redux/filter/selectors";
+import { setCategoryId, setQueryParams } from "../redux/filter/slice";
 import { useNavigate } from "react-router";
-import { fetchProducts, productsSelector } from "../redux/slices/productsSlice";
+import { FetchProductsInterface } from "../redux/product/types";
+import { productsSelector } from "../redux/product/selectors";
+import { fetchProducts } from "../redux/product/asyncActions";
+import { useAppDispatch } from "../redux/store";
 
 const HomeComponent: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { products, status } = useSelector(productsSelector);
-  const { activeCategories, sort, pageCount, searchValue } = useSelector(filterSelector);
+  const { activeCategories, sort, pageCount, searchValue } =
+    useSelector(filterSelector);
   // const { searchItems } = React.useContext(SearchContext);
-  const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-  const onChangeCategories = (i: number) => {
-    dispatch(setCategoryId(i));
-  };
+  const onChangeCategories = React.useCallback((id: number) => {
+    dispatch(setCategoryId(id));
+  }, []);
+  const categoryNames = activeCategories > 0 ? String(activeCategories) : "";
+  const searchItemsName = searchValue ? searchValue : "";
+  const pageCountN = pageCount > 0 ? String(pageCount) : "";
   const fetchItems = async () => {
-    const categoryNames =
-      activeCategories > 0 ? `category=${activeCategories}` : "";
-    const searchItemsName = searchValue ? `search=${searchValue}` : "";
     dispatch(
-      // @ts-ignore
-      fetchProducts({ categoryNames, searchItemsName, sort, pageCount})
+      fetchProducts({ categoryNames, searchItemsName, sort, pageCountN })
     );
   };
 
   React.useEffect(() => {
-    if (isMounted.current) {
+    if (isMounted.current) {      
       const queryString = qs.stringify({
-        category: activeCategories,
-        sortBy: sort.type,
-        search: searchValue,
-        page: pageCount,
+        category: Number(categoryNames) > 0 ? categoryNames : undefined,
+        sortBy: sort.type ? sort.type : undefined,
+        search: searchItemsName ? searchItemsName : undefined,
+        page: pageCountN,
       });
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
+
+    if (!window.location.search) {
+      dispatch(fetchProducts({} as FetchProductsInterface));
+    }
   }, [activeCategories, sort.type, searchValue, pageCount]);
 
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = qs.parse(
+        window.location.search.substring(1)
+      ) as unknown as FilterInterface2;
       const sort = sortList.find((sortItem) => sortItem.type === params.sortBy);
-      dispatch(setQueryParams({ ...params, sort }));
+      if (sort) {
+        params.sort = sort;
+      }
+
+      dispatch(setQueryParams(params));
     }
-    isSearch.current = true;
-    console.log(isSearch.current);
   }, []);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
-    if (isSearch.current) {
-      fetchItems();
-    }
-    isSearch.current = false;
+    fetchItems();
   }, [activeCategories, sort.type, searchValue, pageCount]);
 
   const skeletonItems = [...Array(6)].map((_, index) => (
@@ -75,7 +84,7 @@ const HomeComponent: React.FC = () => {
           value={activeCategories}
           onClickActiveCategories={(i) => onChangeCategories(i)}
         />
-        <Sort />
+        <Sort value={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "failed" ? (

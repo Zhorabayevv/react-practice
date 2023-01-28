@@ -13,25 +13,25 @@ const categories = [
   { id: 5, name: "Закрытые" },
 ];
 
-const Categories: React.FC<CategoriesProps> = ({ value, onClickActiveCategories }) => {
+const Categories: React.FC<CategoriesProps> = React.memo(
+  ({ value, onClickActiveCategories }) => {
+    let catigoriesList = categories.map((item) => {
+      return (
+        <li
+          className={value === item.id ? "active" : ""}
+          onClick={() => onClickActiveCategories(item.id)}
+          key={item.id}
+        >
+          {item.name}
+        </li>
+      );
+    });
 
-
-  let catigoriesList = categories.map((item) => {
     return (
-      <li
-        className={value === item.id ? "active" : ""}
-        onClick={() => onClickActiveCategories(item.id)}
-        key={item.id}
-      >
-        {item.name}
-      </li>
+      <div className="categories">
+        <ul>{catigoriesList}</ul>
+      </div>
     );
-  });
-
-  return (
-    <div className="categories">
-      <ul>{catigoriesList}</ul>
-    </div>
-  );
-}
+  }
+);
 export default Categories;

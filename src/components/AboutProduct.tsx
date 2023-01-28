@@ -1,21 +1,10 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate, useParams } from "react-router";
-
-interface ProductInterface {
-  id: string;
-  imageUrl: string;
-  title: string;
-  types: [number];
-  sizes: [number],
-  price: number;
-  category: number;
-  rating: number;
-}
-
+import { GetProductInterface } from "../redux/product/types";
 
 const AboutProduct: React.FC = () => {
-  const [product, setProduct] = React.useState<ProductInterface>();
+  const [product, setProduct] = React.useState<GetProductInterface>();
   const { id } = useParams();
   const navigate = useNavigate();
 

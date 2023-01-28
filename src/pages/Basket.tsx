@@ -2,23 +2,27 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import BasketProductComponent from "../components/BasketProductComponent";
-import { basketSelector, clearBasket } from "../redux/slices/basketSlice";
+import { basketSelector } from "../redux/basket/selectors";
+import { clearBasket } from "../redux/basket/slice";
 import BasketEmptyComponent from "../components/BasketEmptyComponent";
 
 const Carts: React.FC = () => {
   const dispatch = useDispatch();
   const { products, totalPrice } = useSelector(basketSelector);
-  const totalCount = products.reduce((sum: number, product: any) => sum + product.count, 0);
+  const totalCount = products.reduce(
+    (sum: number, product: any) => sum + product.count,
+    0
+  );
 
   const onClearBasket = () => {
     if (window.confirm("Вы действительно хотите очистить корзину?")) {
-    dispatch(clearBasket());
+      dispatch(clearBasket());
     }
   };
 
-if(!products.length) {
-    return <BasketEmptyComponent />
-}
+  if (!products.length) {
+    return <BasketEmptyComponent />;
+  }
 
   return (
     <div className="container container--cart">
@@ -100,8 +104,7 @@ if(!products.length) {
         <div className="content__items_cart">
           {products.map((product: any) => (
             <BasketProductComponent key={product.id} {...product} />
-          ))  
-          }
+          ))}
         </div>
         <div className="cart__bottom">
           <div className="cart__bottom-details">
@@ -115,7 +118,10 @@ if(!products.length) {
             </span>
           </div>
           <div className="cart__bottom-buttons">
-            <Link to="/" className="button button--outline button--add go-back-btn">
+            <Link
+              to="/"
+              className="button button--outline button--add go-back-btn"
+            >
               <svg
                 width="8"
                 height="14"
@@ -140,7 +146,6 @@ if(!products.length) {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };
